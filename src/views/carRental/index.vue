@@ -149,9 +149,9 @@ export default {
       ]
     }
   },
-  created() {
-    this.initSelect()
-  },
+  // created() {
+  //
+  // },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据
     [CRUD.HOOK.beforeRefresh]() {
@@ -159,11 +159,16 @@ export default {
     },
     // 新增编辑前做的操作
     [CRUD.HOOK.beforeToCU](crud, form) {
+      this.initSelect()
       // const deploys = []
       // form.deploys.forEach(function(deploy, index) {
       //   deploys.push(deploy.id)
       // })
       // this.form.deploys = deploys
+    },
+    [CRUD.HOOK.afterToCU](crud, form) {
+      this.ids = []
+      this.customerIds = []
     },
     initSelect() {
       crudCarRentalInfo.getCarInfo().then(res => {
