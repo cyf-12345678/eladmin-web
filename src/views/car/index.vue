@@ -174,9 +174,21 @@
         <el-table-column v-if="checkPer(['admin','carInfo:edit','carInfo:del'])" label="操作" width="150px" align="center">
           <template slot-scope="scope">
             <udOperation
+              v-if="scope.row.isRent == 0"
               :data="scope.row"
               :permission="permission"
             />
+            <el-button
+              v-if="scope.row.isRent == 2"
+              slot="left"
+              class="filter-item"
+              type="success"
+              size="mini"
+              :loading="delLoading"
+              @click="doSure(scope.row)"
+            >
+              确认
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -205,6 +217,7 @@ export default {
   },
   data() {
     return {
+      elLoading: false,
       permission: {
         add: ['admin', 'carInfo:add'],
         edit: ['admin', 'carInfo:edit'],
@@ -237,6 +250,27 @@ export default {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据
     [CRUD.HOOK.beforeRefresh]() {
       return true
+    },
+    doSure(row) {
+      this.$prompt('请输入损坏赔偿费用', '提示', {
+        title: '损坏赔偿',
+        type: 'success',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'textarea'
+      }).then(({ value }) => {
+        this.delLoading = true
+        crudCarInfo.doSure({ id: row.id, carCompensate: value }).then(() => {
+          this.crud.dleChangePage(1)
+          this.crud.submitSuccessNotify()
+          this.crud.toQuery()
+        })
+      }).catch(() => {
+        // this.$message({
+        //   type: 'info',
+        //   message: '取消提交'
+        // });
+      })
     }
   }
 }

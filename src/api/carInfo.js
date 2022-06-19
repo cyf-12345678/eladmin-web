@@ -24,4 +24,12 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del }
+export function doSure(data) {
+  return request({
+    url: 'api/carInfo/doSure',
+    method: 'put',
+    data
+  })
+}
+
+export default { add, edit, del, doSure }

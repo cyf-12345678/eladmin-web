@@ -38,4 +38,11 @@ export function getCustomerInfo() {
   })
 }
 
-export default { add, edit, del, getCarInfo, getCustomerInfo }
+export function editMethod(data) {
+  return request({
+    url: 'api/carRentalInfo/' + data,
+    method: 'put'
+  })
+}
+
+export default { add, edit, del, getCarInfo, getCustomerInfo, editMethod }

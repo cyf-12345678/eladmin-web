@@ -85,7 +85,20 @@
         <el-table-column prop="carCompensate" label="损坏赔偿" />
         <el-table-column v-if="checkPer(['admin','carRentalInfo:edit','carRentalInfo:del'])" label="操作" width="150px" align="center">
           <template slot-scope="scope">
-            <udOperation :data="scope.row" :permission="permission" />
+            <el-popover
+              :ref="scope.$index"
+              v-permission="['admin']"
+              placement="top"
+              width="180"
+            >
+              <p>确定还车吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="$refs[scope.$index].doClose()">取消</el-button>
+                <el-button :loading="delLoading" type="primary" size="mini" @click="editMethod(scope.row, scope.$index)">确定</el-button>
+              </div>
+              <el-button slot="reference" size="mini" type="text">还车</el-button>
+              <!--              <udOperation :data="scope.row" :permission="permission"/>-->
+            </el-popover>
           </template>
         </el-table-column>
       </el-table>
@@ -100,13 +113,13 @@ import crudCarRentalInfo from '@/api/carRentalInfo'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
+// import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 
 const defaultForm = { id: null, customerId: null }
 export default {
   name: 'CarRentalInfo',
-  components: { pagination, crudOperation, rrOperation, udOperation },
+  components: { pagination, crudOperation, rrOperation },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   dicts: ['car_type', 'car_brand', 'is_return', 'is_damaged'],
   cruds() {
@@ -114,6 +127,7 @@ export default {
   },
   data() {
     return {
+      delLoading: false,
       ids: [],
       customerIds: [],
       permission: {
@@ -162,6 +176,23 @@ export default {
         res.forEach(item => {
           this.customerIds.push(item)
         })
+      })
+    },
+    editMethod(row, index) {
+      this.delLoading = true
+      crudCarRentalInfo.editMethod(row.id).then(() => {
+        this.delLoading = false
+        if (this.$refs[index]) {
+          this.$refs[index].doClose()
+        }
+        this.crud.dleChangePage(1)
+        this.crud.submitSuccessNotify()
+        this.crud.toQuery()
+      }).catch(() => {
+        this.delLoading = false
+        if (this.$refs[index]) {
+          this.$refs[index].doClose()
+        }
       })
     }
   }
