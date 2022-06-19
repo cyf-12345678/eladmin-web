@@ -29,77 +29,107 @@
       <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
       <crudOperation :permission="permission" />
       <!--表单组件-->
-      <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
-        <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-          <el-form-item label="车辆类型">
-            <el-select v-model="form.carType" filterable placeholder="请选择">
-              <el-option
-                v-for="item in dict.car_type"
-                :key="item.id"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="车辆品牌">
-            <el-select v-model="form.carBrand" filterable placeholder="请选择">
-              <el-option
-                v-for="item in dict.car_brand"
-                :key="item.id"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
+      <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="800px">
+        <el-form ref="form" :model="form" :rules="rules" size="small" label-width="120px">
+          <el-row :span="24">
+            <el-col :span="12">
+              <el-form-item label="车辆类型">
+                <el-select v-model="form.carType" filterable placeholder="请选择" style="width: 100%">
+                  <el-option
+                    v-for="item in dict.car_type"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="车辆品牌">
+                <el-select v-model="form.carBrand" filterable placeholder="请选择" style="width: 100%">
+                  <el-option
+                    v-for="item in dict.car_brand"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :span="24">
+            <el-col :span="12">
+              <el-form-item label="客户id">
+                <el-input v-model="form.customerId" style="width: 100%;" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="是否损坏">
+                <el-select v-model="form.isDamaged" filterable placeholder="请选择" style="width: 100%">
+                  <el-option
+                    v-for="item in dict.is_damaged"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :span="24">
+            <el-col :span="12">
+              <el-form-item label="车牌号">
+                <el-input v-model="form.carCode" style="width: 100%" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="座位数">
+                <el-input v-model="form.carSeat" style="width: 100%;" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :span="24">
+            <el-col :span="12">
+              <el-form-item label="每小时租车费" prop="carRentalFee">
+                <el-input v-model="form.carRentalFee" style="width: 100%;" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="押金">
+                <el-input v-model="form.carDeposit" style="width: 100%;" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :span="24">
+            <el-col :span="12">
+              <el-form-item label="是否被租">
+                <el-select v-model="form.isRent" filterable placeholder="请选择" style="width: 100%">
+                  <el-option
+                    v-for="item in dict.is_return"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="损坏赔偿">
+                <el-input v-model="form.carCompensate" style="width: 100%;" />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-form-item label="创建人" prop="createUser">
-            <el-input v-model="form.createUser" style="width: 370px;" />
+            <el-input v-model="form.createUser" style="width: 100%;" />
           </el-form-item>
           <el-form-item label="创建时间" prop="createTime">
-            <el-date-picker v-model="form.createTime" type="datetime" style="width: 370px;" />
+            <el-date-picker v-model="form.createTime" type="datetime" style="width: 100%;" />
           </el-form-item>
           <el-form-item label="更新人" prop="updateUser">
-            <el-input v-model="form.updateUser" style="width: 370px;" />
+            <el-input v-model="form.updateUser" style="width: 100%;" />
           </el-form-item>
           <el-form-item label="更新时间" prop="updateTime">
-            <el-date-picker v-model="form.updateTime" type="datetime" style="width: 370px;" />
-          </el-form-item>
-          <el-form-item label="客户id">
-            <el-input v-model="form.customerId" style="width: 370px;" />
-          </el-form-item>
-          <el-form-item label="是否损坏">
-            <el-select v-model="form.isDamaged" filterable placeholder="请选择">
-              <el-option
-                v-for="item in dict.is_return"
-                :key="item.id"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="车牌号">
-            <el-input v-model="form.carCode" style="width: 370px;" />
-          </el-form-item>
-          <el-form-item label="座位数">
-            <el-input v-model="form.carSeat" style="width: 370px;" />
-          </el-form-item>
-          <el-form-item label="每小时租车费" prop="carRentalFee">
-            <el-input v-model="form.carRentalFee" style="width: 370px;" />
-          </el-form-item>
-          <el-form-item label="押金">
-            <el-input v-model="form.carDeposit" style="width: 370px;" />
-          </el-form-item>
-          <el-form-item label="是否被租">
-            <el-select v-model="form.isRent" filterable placeholder="请选择">
-              <el-option
-                v-for="item in dict.is_return"
-                :key="item.id"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="损坏赔偿">
-            <el-input v-model="form.carCompensate" style="width: 370px;" />
+            <el-date-picker v-model="form.updateTime" type="datetime" style="width: 100%;" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -137,7 +167,7 @@
         </el-table-column>
         <el-table-column prop="isDamaged" label="是否损坏">
           <template slot-scope="scope">
-            {{ dict.label.is_return[scope.row.isDamaged] }}
+            {{ dict.label.is_damaged[scope.row.isDamaged] }}
           </template>
         </el-table-column>
         <el-table-column prop="carCompensate" label="损坏赔偿" />
@@ -169,7 +199,7 @@ export default {
   name: 'CarInfo',
   components: { pagination, crudOperation, rrOperation, udOperation },
   mixins: [presenter(), header(), form(defaultForm), crud()],
-  dicts: ['car_type', 'car_brand', 'is_return'],
+  dicts: ['car_type', 'car_brand', 'is_return', 'is_damaged'],
   cruds() {
     return CRUD({ title: '车辆管理接口', url: 'api/carInfo', idField: 'id', sort: 'id,desc', crudMethod: { ...crudCarInfo }})
   },

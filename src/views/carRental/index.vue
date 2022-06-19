@@ -31,23 +31,23 @@
       <!--表单组件-->
       <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
         <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-          <el-form-item label="客户">
-            <el-select v-model="form.isReturn" filterable placeholder="请选择">
+          <el-form-item label="客户" prop="customerId">
+            <el-select v-model="form.customerId" filterable placeholder="请选择" style="width: 370px">
               <el-option
-                v-for="item in dict.is_return"
-                :key="item.id"
-                :label="item.label"
-                :value="item.value"
+                v-for="(item, index) in customerIds"
+                :key="index"
+                :label="item.name"
+                :value="item.id"
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="租用车辆">
-            <el-select v-model="form.isReturn" filterable placeholder="请选择">
+          <el-form-item label="租用车辆" prop="id">
+            <el-select v-model="form.id" filterable placeholder="请选择" style="width: 370px">
               <el-option
-                v-for="item in dict.is_return"
-                :key="item.id"
-                :label="item.label"
-                :value="item.value"
+                v-for="(item, index) in ids"
+                :key="index"
+                :label="item.carCode"
+                :value="item.id"
               />
             </el-select>
           </el-form-item>
@@ -79,7 +79,7 @@
         <el-table-column prop="carDeposit" label="押金" />
         <el-table-column prop="isDamaged" label="是否损坏">
           <template slot-scope="scope">
-            {{ dict.label.is_return[scope.row.isDamaged] }}
+            {{ dict.label.is_damaged[scope.row.isDamaged] }}
           </template>
         </el-table-column>
         <el-table-column prop="carCompensate" label="损坏赔偿" />
@@ -108,28 +108,61 @@ export default {
   name: 'CarRentalInfo',
   components: { pagination, crudOperation, rrOperation, udOperation },
   mixins: [presenter(), header(), form(defaultForm), crud()],
-  dicts: ['car_type', 'car_brand', 'is_return'],
+  dicts: ['car_type', 'car_brand', 'is_return', 'is_damaged'],
   cruds() {
     return CRUD({ title: '租车管理接口', url: 'api/carRentalInfo', idField: 'id', sort: 'id,desc', crudMethod: { ...crudCarRentalInfo }})
   },
   data() {
     return {
+      ids: [],
+      customerIds: [],
       permission: {
         add: ['admin', 'carRentalInfo:add'],
         edit: ['admin', 'carRentalInfo:edit'],
         del: ['admin', 'carRentalInfo:del']
       },
-      rules: {},
+      rules: {
+        customerId: [
+          { required: true, message: '客户不能为空', trigger: 'blur' }
+        ],
+        id: [
+          { required: true, message: '租用车辆不能为空', trigger: 'blur' }
+        ]
+      },
       queryTypeOptions: [
         { key: 'name', display_name: '客户姓名' },
         { key: 'userPhone', display_name: '联系电话' }
       ]
     }
   },
+  created() {
+    this.initSelect()
+  },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据
     [CRUD.HOOK.beforeRefresh]() {
       return true
+    },
+    // 新增编辑前做的操作
+    [CRUD.HOOK.beforeToCU](crud, form) {
+      // const deploys = []
+      // form.deploys.forEach(function(deploy, index) {
+      //   deploys.push(deploy.id)
+      // })
+      // this.form.deploys = deploys
+    },
+    initSelect() {
+      crudCarRentalInfo.getCarInfo().then(res => {
+        // this.ids = res.data.list
+        res.forEach(item => {
+          this.ids.push(item)
+        })
+      })
+      crudCarRentalInfo.getCustomerInfo().then(res => {
+        res.forEach(item => {
+          this.customerIds.push(item)
+        })
+      })
     }
   }
 }

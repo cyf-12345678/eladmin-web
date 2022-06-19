@@ -24,4 +24,18 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del }
+export function getCarInfo() {
+  return request({
+    url: 'api/carInfo/list',
+    method: 'get'
+  })
+}
+
+export function getCustomerInfo() {
+  return request({
+    url: 'api/customerInfo/list',
+    method: 'get'
+  })
+}
+
+export default { add, edit, del, getCarInfo, getCustomerInfo }
