@@ -85,6 +85,11 @@
         <el-table-column prop="name" label="客户姓名" />
         <el-table-column prop="userPhone" label="联系电话" />
         <el-table-column prop="userCertifcode" label="证件号码" />
+        <el-table-column prop="userSource" label="用户来源">
+          <template slot-scope="scope">
+            {{ dict.label.user_source[scope.row.userSource] }}
+          </template>
+        </el-table-column>
         <!--        <el-table-column prop="createUser" label="创建人" />-->
         <!--        <el-table-column prop="createTime" label="创建时间" />-->
         <!--        <el-table-column prop="updateUser" label="更新人" />-->
@@ -120,6 +125,7 @@ export default {
   name: 'CustomerInfo',
   components: { pagination, crudOperation, rrOperation, udOperation },
   mixins: [presenter(), header(), form(defaultForm), crud()],
+  dicts: ['user_source'],
   cruds() {
     return CRUD({ title: '客户管理接口', url: 'api/customerInfo', idField: 'id', sort: 'id,desc', crudMethod: { ...crudCustomerInfo }})
   },

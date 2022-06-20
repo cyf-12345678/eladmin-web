@@ -217,7 +217,7 @@ export default {
   },
   data() {
     return {
-      elLoading: false,
+      delLoading: false,
       permission: {
         add: ['admin', 'carInfo:add'],
         edit: ['admin', 'carInfo:edit'],
@@ -264,12 +264,14 @@ export default {
           this.crud.dleChangePage(1)
           this.crud.submitSuccessNotify()
           this.crud.toQuery()
+          this.delLoading = false
         })
       }).catch(() => {
         // this.$message({
         //   type: 'info',
         //   message: '取消提交'
         // });
+        this.delLoading = false
       })
     }
   }
