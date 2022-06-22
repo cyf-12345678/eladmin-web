@@ -14,11 +14,13 @@
 <script>
 import PanelGroup from './PanelGroup'
 import LineChart from './LineChart'
+import crudCarRentalOrder from '@/api/carRentalOrder'
+import CRUD from '@crud/crud'
 
 const lineChartData = {
   newVisitis: {
     // expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145, 129, 132, 142, 145, 73]
+    actualData: []
   }
   // messages: {
   //   expectedData: [200, 192, 120, 144, 160, 130, 140],
@@ -40,10 +42,18 @@ export default {
     PanelGroup,
     LineChart
   },
+  cruds() {
+    return CRUD({ crudMethod: { ...crudCarRentalOrder }})
+  },
   data() {
     return {
       lineChartData: lineChartData.newVisitis
     }
+  },
+  created() {
+    crudCarRentalOrder.selectMonthCount().then(res => {
+      lineChartData.newVisitis.actualData = Object.values(res)
+    })
   },
   methods: {
     handleSetLineChartData(type) {
